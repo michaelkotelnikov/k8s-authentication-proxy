@@ -1,0 +1,23 @@
+webserver:
+  service: 
+    name: webserver
+    port: 8080
+    secured: false
+
+proxy:
+  service:
+    port: 8080
+  credentials:
+    base64: cHVzaGdhdGV3YXk6JGFwcjEkSXpabFUxakEkZDVRYjdTaHN5VEtzZ3JrS1RFamhRLwo=
+  configuration:
+    path: /opt/bitnami/nginx/conf
+    file: nginx.conf
+  resources:
+    limits:
+      cpu: 100m
+      memory: 256Mi
+    requests:
+      cpu: 10m
+      memory: 128Mi
+              
+

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}
+          image: docker.io/bitnami/nginx:1.20.2
+          ports:
+            - containerPort: {{ .Values.proxy.service.port }}
+              name: nginx
+          volumeMounts:
+            - mountPath: {{ .Values.proxy.configuration.path }}/{{ .Values.proxy.configuration.file }}
+              name: configuration-{{ .Release.Name }}
+              subPath: {{ .Values.proxy.configuration.file }}
+            - mountPath: {{ .Values.proxy.configuration.path }}/credentials-{{ .Release.Name }}
+              name: credentials-{{ .Release.Name }}
+              subPath: credentials-{{ .Release.Name }}
+          resources:
+            requests:
+              memory: {{ .Values.proxy.resources.requests.memory }}
+              cpu: {{ .Values.proxy.resources.requests.cpu }}
+            limits:
+              memory:  {{ .Values.proxy.resources.limits.memory }}
+              cpu: {{ .Values.proxy.resources.limits.cpu }}
+      volumes:
+        - configMap:
+            defaultMode: 420
+            items:
+            - key: {{ .Values.proxy.configuration.file }}
+              path: {{ .Values.proxy.configuration.file }}
+            name: configuration-{{ .Release.Name }}
+          name: configuration-{{ .Release.Name }}
+        - secret:
+            secretName: credentials-{{ .Release.Name }}
+          name: credentials-{{ .Release.Name }}
