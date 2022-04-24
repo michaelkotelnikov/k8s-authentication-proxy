@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}
   labels:
-    app: {{ .Release.Name }}
+    app: {{ .Chart.Name }}
 spec:
   selector:
     matchLabels:
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: {{ .Release.Name }}
-          image: docker.io/bitnami/nginx:1.20.2
+          image: {{ .Values.proxy.image.registry }}/{{ .Values.proxy.image.repository }}/{{ .Values.proxy.image.image }}:{{ .Chart.AppVersion }}
           ports:
             - containerPort: {{ .Values.proxy.service.port }}
               name: nginx

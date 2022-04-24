@@ -5,6 +5,10 @@ webserver:
     secured: false
 
 proxy:
+  image:
+    registry: docker.io
+    repository: bitnami
+    name: nginx
   service:
     port: 8080
   credentials:
