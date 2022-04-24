@@ -1,32 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ .Chart.Name }}
   labels:
     app: {{ .Chart.Name }}
 spec:
   selector:
     matchLabels:
-      app: {{ .Release.Name }}
+      app: {{ .Chart.Name }}
   replicas: 1
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}
+        app: {{ .Chart.Name }}
     spec:
       containers:
-        - name: {{ .Release.Name }}
+        - name: {{ .Chart.Name }}
           image: {{ .Values.proxy.image.registry }}/{{ .Values.proxy.image.repository }}/{{ .Values.proxy.image.name }}:{{ .Chart.AppVersion }}
           ports:
             - containerPort: {{ .Values.proxy.service.port }}
               name: nginx
           volumeMounts:
             - mountPath: {{ .Values.proxy.configuration.path }}/{{ .Values.proxy.configuration.file }}
-              name: configuration-{{ .Release.Name }}
+              name: configuration-{{ .Chart.Name }}
               subPath: {{ .Values.proxy.configuration.file }}
-            - mountPath: {{ .Values.proxy.configuration.path }}/credentials-{{ .Release.Name }}
-              name: credentials-{{ .Release.Name }}
-              subPath: credentials-{{ .Release.Name }}
+            - mountPath: {{ .Values.proxy.configuration.path }}/credentials-{{ .Chart.Name }}
+              name: credentials-{{ .Chart.Name }}
+              subPath: credentials-{{ .Chart.Name }}
           resources:
             requests:
               memory: {{ .Values.proxy.resources.requests.memory }}
@@ -40,8 +40,8 @@ spec:
             items:
             - key: {{ .Values.proxy.configuration.file }}
               path: {{ .Values.proxy.configuration.file }}
-            name: configuration-{{ .Release.Name }}
-          name: configuration-{{ .Release.Name }}
+            name: configuration-{{ .Chart.Name }}
+          name: configuration-{{ .Chart.Name }}
         - secret:
-            secretName: credentials-{{ .Release.Name }}
-          name: credentials-{{ .Release.Name }}
+            secretName: credentials-{{ .Chart.Name }}
+          name: credentials-{{ .Chart.Name }}

@@ -55,7 +55,7 @@ data:
 
             location / {
                 auth_basic "Authentication Proxy server authentication";
-                auth_basic_user_file /opt/bitnami/nginx/conf/credentials-{{ .Release.Name }};
+                auth_basic_user_file /opt/bitnami/nginx/conf/credentials-{{ .Chart.Name }};
                 proxy_pass {{ include "webserver.service.protocol" . }}://{{ .Values.webserver.service.name }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.webserver.service.port }};
                 proxy_ssl_verify off;
             }
@@ -70,4 +70,4 @@ data:
     }
 kind: ConfigMap
 metadata:
-  name: configuration-{{ .Release.Name }}
+  name: configuration-{{ .Chart.Name }}
