@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: {{ .Release.Name }}
-          image: {{ .Values.proxy.image.registry }}/{{ .Values.proxy.image.repository }}/{{ .Values.proxy.image.image }}:{{ .Chart.AppVersion }}
+          image: {{ .Values.proxy.image.registry }}/{{ .Values.proxy.image.repository }}/{{ .Values.proxy.image.name }}:{{ .Chart.AppVersion }}
           ports:
             - containerPort: {{ .Values.proxy.service.port }}
               name: nginx
