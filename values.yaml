@@ -12,7 +12,7 @@ proxy:
   service:
     port: 8080
   credentials:
-    base64: cHVzaGdhdGV3YXk6JGFwcjEkSXpabFUxakEkZDVRYjdTaHN5VEtzZ3JrS1RFamhRLwo=
+    base64: YWRtaW46JGFwcjEkSC9xYmxRcXkkRndxQVh1M2swcGpENXpDUndSdlk5Lwo=
   configuration:
     path: /opt/bitnami/nginx/conf
     file: nginx.conf
