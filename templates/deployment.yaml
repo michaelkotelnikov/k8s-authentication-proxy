@@ -3,16 +3,16 @@ kind: Deployment
 metadata:
   name: {{ .Chart.Name }}
   labels:
-    app: {{ .Chart.Name }}
+    {{- include "k8s-authentication-proxy.labels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      {{- include "k8s-authentication-proxy.selectorLabels" . | nindent 6 }}
   replicas: 1
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        {{- include "k8s-authentication-proxy.selectorLabels" . | nindent 8 }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
@@ -22,26 +22,21 @@ spec:
               name: nginx
           volumeMounts:
             - mountPath: {{ .Values.proxy.configuration.path }}/{{ .Values.proxy.configuration.file }}
-              name: configuration-{{ .Chart.Name }}
+              name: {{ template "k8s-authentication-proxy.configuration.name" . }}
               subPath: {{ .Values.proxy.configuration.file }}
-            - mountPath: {{ .Values.proxy.configuration.path }}/credentials-{{ .Chart.Name }}
-              name: credentials-{{ .Chart.Name }}
-              subPath: credentials-{{ .Chart.Name }}
+            - mountPath: {{ .Values.proxy.configuration.path }}/{{ template "k8s-authentication-proxy.credentials.name" . }}
+              name: {{ template "k8s-authentication-proxy.credentials.name" . }}
+              subPath: {{ template "k8s-authentication-proxy.credentials.name" . }}
           resources:
-            requests:
-              memory: {{ .Values.proxy.resources.requests.memory }}
-              cpu: {{ .Values.proxy.resources.requests.cpu }}
-            limits:
-              memory:  {{ .Values.proxy.resources.limits.memory }}
-              cpu: {{ .Values.proxy.resources.limits.cpu }}
+            {{- toYaml .Values.proxy.resources | nindent 12 }}
       volumes:
         - configMap:
             defaultMode: 420
             items:
             - key: {{ .Values.proxy.configuration.file }}
               path: {{ .Values.proxy.configuration.file }}
-            name: configuration-{{ .Chart.Name }}
-          name: configuration-{{ .Chart.Name }}
+            name: {{ template "k8s-authentication-proxy.configuration.name" . }}
+          name: {{ template "k8s-authentication-proxy.configuration.name" . }}
         - secret:
-            secretName: credentials-{{ .Chart.Name }}
-          name: credentials-{{ .Chart.Name }}
+            secretName: {{ template "k8s-authentication-proxy.credentials.name" . }}
+          name: {{ template "k8s-authentication-proxy.credentials.name" . }}
